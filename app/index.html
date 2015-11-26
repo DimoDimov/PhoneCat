@@ -1,15 +1,46 @@
 <!doctype html>
-<html lang="en" ng-app>
+<html lang="en" ng-app="phonecatApp" ng-controller="PhoneListCtrl">
+
 <head>
-  <meta charset="utf-8">
-  <title>My HTML File</title>
-  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
-  <link rel="stylesheet" href="css/app.css">
-  <script src="bower_components/angular/angular.js"></script>
+    <meta charset="utf-8">
+    <!-- no flicker -->
+    <title ng-bind-template="Google Phone Gallery: {{query}}">Google Phone Gallery</title>
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="css/app.css">
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="js/controllers.js"></script>
 </head>
+
 <body>
-
-  <p>Nothing here {{'yet' + '!'}}</p>
-
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2">
+                <!--Sidebar content-->
+                <div>
+                    Search:
+                    <input ng-model="query">
+                </div>
+                <div>
+                    Sort by:
+                    <select ng-model="orderProp">
+                        <option value="name">Alphabetical</option>
+                        <option value="age">Newest</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-10">
+                <!--Body content-->
+                <ul class="phones">
+                    <li ng-repeat="phone in phones | filter:query| orderBy:orderProp">
+                        <span>{{phone.name}}</span>
+                        <p>{{phone.snippet}}</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
 </body>
+
 </html>
