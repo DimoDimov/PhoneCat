@@ -10,7 +10,7 @@ describe('PhoneCat App', function() {
             query;
 
         beforeEach(function() {
-            browser.get('app/index.html');
+            browser.get('app/index.html#/phones');
             phoneList = element.all(by.repeater('phone in phones'));
             query = element(by.model('query'));
         });
@@ -24,14 +24,6 @@ describe('PhoneCat App', function() {
             query.clear();
             query.sendKeys('motorola');
             expect(phoneList.count()).toBe(8);
-        });
-
-        it('should display the current filter value in the title bar', function() {
-            query.clear();
-            expect(browser.getTitle()).toMatch(/Google Phone Gallery:\s*$/);
-
-            query.sendKeys('nexus');
-            expect(browser.getTitle()).toMatch(/Google Phone Gallery: nexus$/);
         });
 
         it('should be possible to control phone order via the drop down select box', function() {
@@ -71,14 +63,36 @@ describe('PhoneCat App', function() {
                 });
         });
 
-        it('should render phone specific links', function() {
-            var query = element(by.model('query'));
-            query.sendKeys('nexus');
-            element.all(by.css('.phones li a')).first().click();
+        it('should redirect index.html to index.html#/phones', function() {
+            browser.get('app/index.html');
             browser.getLocationAbsUrl().then(function(url) {
-                expect(url).toBe('/phones/nexus-s');
+                expect(url).toEqual('/phones');
             });
         });
+    });
 
+    describe('Phone detail view', function() {
+
+        beforeEach(function() {
+            browser.get('app/index.html#/phones/nexus-s');
+        });
+
+
+        it('should display nexus-s page', function() {
+            expect(element(by.binding('phone.name')).getText()).toBe('Nexus S');
+        });
+
+        it('should display the first phone image as the main phone image', function() {
+            expect(element(by.css('img.phone')).getAttribute('src')).toMatch(/img\/phones\/nexus-s.0.jpg/);
+        });
+
+
+        it('should swap main image if a thumbnail image is clicked on', function() {
+            element(by.css('.phone-thumbs li:nth-child(3) img')).click();
+            expect(element(by.css('img.phone')).getAttribute('src')).toMatch(/img\/phones\/nexus-s.2.jpg/);
+
+            element(by.css('.phone-thumbs li:nth-child(1) img')).click();
+            expect(element(by.css('img.phone')).getAttribute('src')).toMatch(/img\/phones\/nexus-s.0.jpg/);
+        });
     });
 });
