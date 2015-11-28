@@ -31,7 +31,7 @@ phonecatAnimations.animation('.phone', function() {
     element.css({
       position: 'absolute',
       left: 0,
-      top: 0
+      top: 0,
     });
 
     jQuery(element).animate({
