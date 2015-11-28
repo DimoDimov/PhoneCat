@@ -1,20 +1,19 @@
 'use strict';
 var phonecatControllers = angular.module('phonecatControllers', []);
 
-phonecatControllers.controller('PhoneListCtrl', ['$scope', '$routeParams', '$http',
-    function($scope, $routeParams, $http) {
-        $http.get('phones/phones.json').success(function(data) {
-            $scope.phones = data;
-        });
+phonecatControllers.controller('PhoneListCtrl', ['$scope', 'Phone', '$http',
+    function($scope, Phone, $http) {
+        $scope.phones = Phone.query();
         $scope.orderProp = 'age';
     }
 ]);
 
-phonecatControllers.controller('PhoneDetailCtrl', ['$scope', '$routeParams', '$http',
-    function($scope, $routeParams, $http) {
-        $http.get('phones/' + $routeParams.phoneId + '.json').success(function(data) {
-            $scope.phone = data;
-            $scope.mainImageUrl = data.images[0];
+phonecatControllers.controller('PhoneDetailCtrl', ['$scope', '$routeParams', 'Phone',
+    function($scope, $routeParams, Phone) {
+        $scope.phone = Phone.get({
+            phoneId: $routeParams.phoneId
+        }, function(phone) {
+            $scope.mainImageUrl = phone.images[0];
         });
 
         $scope.setImage = function(imageUrl) {
